@@ -27,14 +27,14 @@ $('#submit').on('click', event => {
     let scores = [];
     questions.forEach((question, i) => {
         let string = $(`#q${i + 1}`).val();
-        scores.push(+string.charAt(0));
+        scores.push(string.charAt(0));
     });
     const friend = {
         name: $('#name').val().trim(),
         photo: $('#photo').val().trim(),
-        scores: scores
+        scores: +scores
     };
-    
+
     console.log(friend);
     const currentURL = window.location.origin;
     $.post(currentURL + '/api/friends', friend, data => {
