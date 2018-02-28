@@ -3,8 +3,6 @@ const questions =  [
     'Are you hanging from a tree?', 'Do you need a lot of sunlight?', 'Are you a bright color?', 'Are you juicy?', 'Can I eat you now?'
 ];
 
-const currentURL = window.location.origin;
-
 questions.forEach((question, i) => {
 $('.survey').append(`
     <div class="row col-md-6">
@@ -22,13 +20,10 @@ $('.survey').append(`
     </div>
 `)});
 
-function findFriend(friend) {
-    console.log(friend);
-};
-
 $(document).ready(() => {
 
-$('#submit').on('click', () => {
+$('#submit').on('click', event => {
+    event.preventDefault();
     let scores = [];
     questions.forEach((question, i) => {
         let string = $(`#q${i + 1}`).val();
@@ -39,9 +34,11 @@ $('#submit').on('click', () => {
         photo: $('#photo').val().trim(),
         scores: scores
     };
+    
+    console.log(friend);
+    const currentURL = window.location.origin;
     $.post(currentURL + '/api/friends', friend, data => {
         console.log(data);
-        findFriend();
     });
 });
 
