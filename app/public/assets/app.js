@@ -22,24 +22,27 @@ $('.survey').append(`
 
 $(document).ready(() => {
 
-$('#submit').on('click', event => {
-    event.preventDefault();
-    let scores = [];
-    questions.forEach((question, i) => {
-        let string = $(`#q${i + 1}`).val();
-        scores.push(string.charAt(0));
-    });
-    const friend = {
-        name: $('#name').val().trim(),
-        photo: $('#photo').val().trim(),
-        scores: +scores
-    };
+    $('#submit').on('click', event => {
+        event.preventDefault();
+        if ($('#name').val() !== '' && $('#photo').val() !== '') {
+            let scores = [];
+            questions.forEach((question, i) => {
+                let string = $(`#q${i + 1}`).val().substring(0,1);
+                scores.push(+string);
+            });
 
-    console.log(friend);
-    const currentURL = window.location.origin;
-    $.post(currentURL + '/api/friends', friend, data => {
-        console.log(data);
+            const friend = {
+                name: $('#name').val().trim(),
+                photo: $('#photo').val().trim(),
+                scores: scores
+            };
+
+            const currentURL = window.location.origin;
+            $.get(currentURL + '/api/friends', res => {
+                console.log(res);
+            });
+            $.post(currentURL + '/api/friends', friend, data => {});
+        };
     });
-});
 
 })
