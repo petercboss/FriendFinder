@@ -24,8 +24,8 @@ $(document).ready(() => {
 
     $('#submit').on('click', event => {
         event.preventDefault();
+        let scores = [];
         if ($('#name').val() !== '' && $('#photo').val() !== '') {
-            let scores = [];
             questions.forEach((question, i) => {
                 let string = $(`#q${i + 1}`).val().substring(0,1);
                 scores.push(+string);
@@ -39,9 +39,31 @@ $(document).ready(() => {
 
             const currentURL = window.location.origin;
             $.get(currentURL + '/api/friends', res => {
-                console.log(res);
+                let currentMatch = 40;
+                let bestMatch;
+                let compareArray = [];
+                res.forEach(i => {
+                    scores.forEach(j => {
+                        compareArray.push(Math.abs(scores[j] - i.scores[j]));
+                    });
+                    let compareEach = compareArray.reduce((a, b) => a + b, 0);
+                    if (compareEach < currentMatch) {
+                        bestMatch = i;
+                        currentMatch = compareEach;
+                        compareArray = [];
+                        console.log(bestMatch);
+                    }
+                    else {
+                        compareArray = [];
+                    };    
+                }); 
+                $.post(currentURL + '/api/friends', friend, data => {});
+                $('#display').html(`${bestMatch.name.toUpperCase()}<img src="${bestMatch.photo}" width="300" height="300">`);
+                $('#modal').modal('show');
+                $('#reset').on('click', () => {
+                    window.location.reload();
+                });
             });
-            $.post(currentURL + '/api/friends', friend, data => {});
         };
     });
 
